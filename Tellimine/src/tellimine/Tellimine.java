@@ -9,8 +9,7 @@ import javax.swing.JFrame;
 public class Tellimine  extends JFrame{
 
     public Tellimine(){
-          super("Tellimine");
-         
+          super("Tellimine");       
     }
     
     
@@ -19,10 +18,14 @@ public class Tellimine  extends JFrame{
        this.setPreferredSize(new Dimension(800, 300));
        this.setLayout(new BorderLayout());
        
-        JPanel1 panel = new JPanel1();
-        //panel.panel1();
-        this.add(panel, BorderLayout.NORTH);
-        //lisa teine paneel
+        JPanel1 panel1 = new JPanel1();
+        this.add(panel1, BorderLayout.NORTH);
+
+        JPanel2 panel2 = new JPanel2();
+        this.add(panel2, BorderLayout.CENTER);
+        
+        JPanel3 panel3 = new JPanel3();
+        this.add(panel3, BorderLayout.SOUTH);
         
         this.setVisible(true);
         this.pack();

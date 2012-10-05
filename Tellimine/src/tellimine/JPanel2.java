@@ -1,22 +1,39 @@
 package tellimine;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.util.Date;
+import javax.swing.BorderFactory;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
 public class JPanel2 extends JPanel{
     
-    public void panel2(){
+    public JPanel2(){
+        super();
+     panel2();
+    }
+    
+    private void panel2(){
         
-        GridLayout grid = new GridLayout(4,6);
-        JPanel content = new JPanel();
-        content.setLayout(grid);
-        content.setSize(700, 100);
-        content.add(new JLabel("Tellimuse ID"));
-        content.add(new JLabel("3005"));
-        content.add(new JLabel("Tellija:"));
-        content.add(new JLabel("Proov"));
+        this.setPreferredSize(new Dimension(700,75));
+        this.setLayout(new GridLayout(3,4));
+        this.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.add(new JLabel("Tellimuse ID"));
+        this.add(new JLabel("3005"));
+        this.add(new JLabel("Tellija:"));
+        this.add(new JFormattedTextField("Proov"));
+        this.add(new JLabel("Sissekandekuupäev"));
+        this.add(new JFormattedTextField(new Date()));
+        this.add(new JLabel("Töökäsu nr."));
+        this.add(new JFormattedTextField("1000"));
+        this.add(new JLabel("Tellimise Detailid"));
+        this.add(new JLabel(""));
+        this.add(new JLabel(""));
+        this.add(new JLabel(""));
     }
     
 }
