@@ -23,7 +23,7 @@ public class JPanel1 extends JPanel{
     
    
    private void initKomp(){
-     this.setPreferredSize(new Dimension(700,25));
+     this.setPreferredSize(new Dimension(800,25));
      this.setLayout(new BorderLayout());
        this.setBorder(BorderFactory.createLineBorder(Color.black));
        Font f = new Font("Dialog", Font.PLAIN, 20);

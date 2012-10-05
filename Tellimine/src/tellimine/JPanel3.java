@@ -1,5 +1,6 @@
 package tellimine;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.BorderFactory;
@@ -19,7 +20,8 @@ public class JPanel3 extends JPanel{
     }
     
     private void panel3(){
-        this.setPreferredSize(new Dimension(800,150));
+        this.setPreferredSize(new Dimension(800,100));
+        this.setLayout(new BorderLayout());
         this.setBorder(BorderFactory.createLineBorder(Color.black));
         Boolean cb = true;
         Object rowData[][] = { { "New Record", "1", "-", "05.10.2012", cb},
@@ -28,7 +30,6 @@ public class JPanel3 extends JPanel{
         TabMudel dtm=new TabMudel(rowData,tPais);
         JTable tabel=new JTable(dtm);
         JScrollPane jsp=new JScrollPane(tabel);
-        add(jsp);
-        
+        this.add(jsp,BorderLayout.CENTER);
         }
 }    

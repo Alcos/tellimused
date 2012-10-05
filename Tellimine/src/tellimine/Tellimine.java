@@ -14,7 +14,7 @@ public class Tellimine  extends JFrame{
     
     
     public  void looFrame(){
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        this.setPreferredSize(new Dimension(800, 300));
        this.setLayout(new BorderLayout());
        
@@ -42,13 +42,7 @@ public class Tellimine  extends JFrame{
             @Override
         public void run() {
                  raam.looFrame();
-                 
-                 }
+                }
              });
-        
-        
-        /*JPanel2 paneel = new JPanel2();
-        paneel.panel2();
-        frame.add(paneel);*/
     }
 }

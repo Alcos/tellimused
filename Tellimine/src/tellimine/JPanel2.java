@@ -18,8 +18,7 @@ public class JPanel2 extends JPanel{
     }
     
     private void panel2(){
-        
-        this.setPreferredSize(new Dimension(700,75));
+          
         this.setLayout(new GridLayout(3,4));
         this.setBorder(BorderFactory.createLineBorder(Color.black));
         this.add(new JLabel("Tellimuse ID"));
