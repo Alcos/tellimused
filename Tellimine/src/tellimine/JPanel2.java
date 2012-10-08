@@ -1,7 +1,6 @@
 package tellimine;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Date;
 import javax.swing.BorderFactory;
@@ -20,7 +19,7 @@ public class JPanel2 extends JPanel{
     private void panel2(){
           
         this.setLayout(new GridLayout(3,4));
-        this.setBorder(BorderFactory.createLineBorder(Color.black));
+        //this.setBorder(BorderFactory.createLineBorder(Color.black));
         this.add(new JLabel("Tellimuse ID"));
         this.add(new JLabel("3005"));
         this.add(new JLabel("Tellija:"));
