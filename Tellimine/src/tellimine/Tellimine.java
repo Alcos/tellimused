@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 
@@ -14,7 +16,7 @@ public class Tellimine  extends JFrame{
           super("Tellimine");       
     }
     
-    public  void looFrame(){
+    public  void looFrame() throws Exception{
         
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        this.setPreferredSize(new Dimension(800, 310));
@@ -64,13 +66,17 @@ public class Tellimine  extends JFrame{
     
     public static void main(String[] args) throws Exception{
         
-        
+        Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
        
        final Tellimine raam = new Tellimine();
         EventQueue.invokeLater(new Runnable() {
             @Override
         public void run() {
-                 raam.looFrame();
+                try {
+                    raam.looFrame();
+                } catch (Exception ex) {
+                    Logger.getLogger(Tellimine.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 }
              });
     }

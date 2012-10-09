@@ -1,8 +1,12 @@
 package tellimine;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import javax.swing.BorderFactory;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -13,31 +17,74 @@ public class JPanel3 extends JPanel{
    private static String[] tPais={"ArtikliID","Kogus","Märkus","Tellimiskuupäev","Tellitud"};
    private static Object andmed[][]=null;
    
-    public JPanel3(){
+    public JPanel3() throws Exception{
         super();
      panel3();
     }
     
-    private void panel3(){
+    public static Connection connect1() {
+        
+        Connection conn = null;
+        
+        try{    
+            conn = DriverManager.getConnection("jdbc:cubrid:localhost:33000:Access::","dba","qwerty");
+        }
+        catch ( Exception e ) {
+
+           System.err.println("SQLException : " + e.getMessage());
+        }
+        return conn;
+    }
+    
+    private void panel3() throws Exception{
+        
+        Statement stmt = null;
+        ResultSet rs = null;
+        ArrayList nl = new ArrayList();
+        String nimi = null;
+        Integer suurus = null;
+        int tulpi = 5;
+        Boolean cb = true;
+        Connection conn=connect1();
+        
+        stmt = conn.createStatement();
+        rs = stmt.executeQuery("SELECT * FROM Andmed");
+      
+        while(rs.next()) {
+          nimi = rs.getString("ID");
+          nl.add(nimi);
+        }
+        rs.close();
+        
+        Object[] array = nl.toArray();
+        suurus=array.length;
+        andmed=new Object[suurus][tulpi];
+        PreparedStatement pstmt = conn.prepareStatement("SELECT kogus,markus,kuupaev FROM Andmed WHERE ID=?");
+        
+        for(int a=0;a<suurus;a++){
+    
+        pstmt.setObject(1, array[a]);
+        ResultSet rs3 = pstmt.executeQuery();
+
+        rs3.next();
+        Double kogus = rs3.getDouble(1);
+        String markus = rs3.getString(2);
+        String kuupaev = rs3.getString(3);
+            andmed[a][0]=array[a];
+            andmed[a][1]=kogus;
+            andmed[a][2]=markus;
+            andmed[a][3]=kuupaev;
+            andmed[a][4]=cb;
+           rs3.close();
+        } //for lõpp
+        
+        
         this.setLayout(new BorderLayout());
         //this.setBorder(BorderFactory.createLineBorder(Color.black));
-        Boolean cb = true;
-        Object rowData[][] = { { "New Record", "1", "-", "05.10.2012", cb},
-                       { "Old Record", "1", "-", "05.10.2012", cb},
-                       { "Old qweqweqwe", "1", "-", "05.10.2012", cb},
-                { "ASD", "1", "-", "05.10.2012", cb},
-                { "QWE", "1", "-", "05.10.2012", cb},
-                { "ASFAS", "1", "-", "05.10.2012", cb},
-                { "QWEQWR", "1", "-", "05.10.2012", cb},
-                { "ASFQRQW", "1", "-", "05.10.2012", cb},
-                { "ASDQWT", "1", "-", "05.10.2012", cb},
-                { "QWEASD", "1", "-", "05.10.2012", cb},
-                { "ASCWE", "1", "-", "05.10.2012", cb},
-                { "Old aewqe", "1", "-", "05.10.2012", cb} };
-
-        TabMudel dtm=new TabMudel(rowData,tPais);
+        
+        TabMudel dtm=new TabMudel(andmed,tPais);
         JTable tabel=new JTable(dtm);
         JScrollPane jsp=new JScrollPane(tabel);
         this.add(jsp,BorderLayout.CENTER);
-        }    
-}    
+        }
+}
