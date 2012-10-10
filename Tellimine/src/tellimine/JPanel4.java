@@ -13,7 +13,6 @@ public class JPanel4 extends JPanel{
         
         private void panel4(){
             this.add(new JButton("Uuenda"));
-            this.add(new JButton("Lisa Artikkel"));
-            
+            this.add(new JButton("Lisa Artikkel"));         
         }
 }
