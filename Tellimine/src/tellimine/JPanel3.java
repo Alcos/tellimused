@@ -101,11 +101,10 @@ public class JPanel3 extends JPanel{
         popup.add(menuItem);
         menuItem = new JMenuItem("Delete Record");
         popup.add(menuItem);
-        
         menuItem.addActionListener(new ActionListener(){
         public void actionPerformed(ActionEvent e){}
   });
-  
+
         tabel.addMouseListener(new MouseAdapter(){
         public void mouseReleased(MouseEvent Me){
         if(Me.isPopupTrigger()){
@@ -127,5 +126,5 @@ public class JPanel3 extends JPanel{
         }
   });
         
-   }  
+   }
 }

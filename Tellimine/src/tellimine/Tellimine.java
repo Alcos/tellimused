@@ -10,13 +10,13 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 
-public class Tellimine  extends JFrame{
+public class Tellimine extends JFrame{
 
     public Tellimine(){
-          super("Tellimine");       
+          super("Tellimine");
     }
     
-    public  void looFrame() throws Exception{
+    public void looFrame() throws Exception{
         
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        this.setPreferredSize(new Dimension(800, 310));
