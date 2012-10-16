@@ -28,12 +28,13 @@ import javax.swing.table.TableModel;
 
 public class JPanel3 extends JPanel{
     
-   private static String[] tPais={"ArtikliID","Kogus","Märkus","Tellimiskuupäev","Tellitud"};
+   private static String[] tPais={"ID","ArtikliID","Kogus","Märkus","Tellimiskuupäev","Tellitud"};
    private static Object andmed[][]=null;
    private Connection conn;
    JPopupMenu popup;
    JMenuItem menuItem;
    JTable tabel;
+   TabMudel dtm;
    Integer rowNumber;
    
     public JPanel3() throws Exception{
@@ -57,51 +58,12 @@ public class JPanel3 extends JPanel{
     
     private void panel3() throws Exception{
         
-        Statement stmt = null;
-        ResultSet rs = null;
-        ArrayList nl = new ArrayList();
-        String nimi = null;
-        Integer suurus = null;
-        int tulpi = 5;
-        Boolean cb = true;
-        conn=connect1();
+        tabel_andmed();
         
-        stmt = conn.createStatement();
-        rs = stmt.executeQuery("SELECT * FROM Andmed");
-      
-        while(rs.next()) {
-          nimi = rs.getString("ID");
-          nl.add(nimi);
-        }
-        rs.close();
-        
-        Object[] array = nl.toArray();
-        suurus=array.length;
-        andmed=new Object[suurus][tulpi];
-        PreparedStatement pstmt = conn.prepareStatement("SELECT kogus,markus,kuupaev FROM Andmed WHERE ID=?");
-        
-        for(int a=0;a<suurus;a++){
-    
-        pstmt.setObject(1, array[a]);
-        ResultSet rs3 = pstmt.executeQuery();
-
-        rs3.next();
-        String kogus = rs3.getString(1);
-        String markus = rs3.getString(2);
-        String kuupaev = rs3.getString(3);
-            andmed[a][0]=array[a];
-            andmed[a][1]=kogus;
-            andmed[a][2]=markus;
-            andmed[a][3]=kuupaev;
-            andmed[a][4]=cb;
-           rs3.close();
-        } //for lõpp
-        
-    
         this.setLayout(new BorderLayout());
         
         ActionListener actionListener = new PopupActionListener();
-        TabMudel dtm=new TabMudel(andmed,tPais);
+        dtm=new TabMudel(andmed,tPais);
         tabel=new JTable(dtm);
         JScrollPane jsp=new JScrollPane(tabel);
         this.add(jsp,BorderLayout.CENTER);
@@ -113,68 +75,108 @@ public class JPanel3 extends JPanel{
         menuItem.addActionListener(actionListener);
         popup.add(menuItem);
         
+        
         menuItem.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){}
-  });
+        });
 
         tabel.addMouseListener(new MouseAdapter(){
             public void mouseReleased(MouseEvent Me){
                 if(Me.isPopupTrigger()){
                     popup.show(Me.getComponent(), Me.getX(), Me.getY());
                        
-                        // get the coordinates of the mouse click
 			Point p = Me.getPoint();
- 
-			// get the row index that contains that coordinate
 			rowNumber = tabel.rowAtPoint( p );
- 
-			// Get the ListSelectionModel of the JTable
 			ListSelectionModel model = tabel.getSelectionModel();
- 
-			// set the selected interval of rows. Using the "rowNumber"
-			// variable for the beginning and end selects only that one row.
 			model.setSelectionInterval( rowNumber, rowNumber );
+                        
+                   }
             }
-        }
-  });
+        });
         
-    
-    tabel.getModel().addTableModelListener(new TableModelListener() {
+    /*
+        tabel.getModel().addTableModelListener(new TableModelListener() {
 
-      public void tableChanged(TableModelEvent e) {
-          int row = e.getFirstRow();
-          int column = e.getColumn();
-            TableModel model = (TableModel)e.getSource();
-            Boolean value = (Boolean)model.getValueAt(row, column);
-            andmed[row][column] = value;
-      }
-    });
-        
-   }
+              public void tableChanged(TableModelEvent e) {
+                  int row = e.getFirstRow();
+                  int column = 4;
+                      TableModel model = (TableModel)e.getSource();
+                      Boolean value = (Boolean)model.getValueAt(row, column);
+                      andmed[row][column] = value;
+              }
+         });
+        */
+   }    
     
         class PopupActionListener implements ActionListener {
             public void actionPerformed(ActionEvent actionEvent) {
                 
-                if(actionEvent.getActionCommand() == "New Record"){
+                if(actionEvent.getActionCommand().equals("New Record")){
                     try {
-                        System.out.println("New");
-                         PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO Andmed VALUES (' ',' ',' ',' ')");
+                         System.out.println("New");
+                         PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO andmed"+ " (artikkel, kogus, markus, kuupaev)"+ " VALUES ('','','','')");
                          pstmt1.executeUpdate();
+                         Object [] uusRida={"","",0,"","",true};
+                         dtm.addRow(uusRida);
+                         //dtm.fireTableDataChanged();
                     } catch (SQLException ex) {
                          Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
-                if(actionEvent.getActionCommand() == "Delete Record"){
+                if(actionEvent.getActionCommand().equals("Delete Record")){
                     try {
                         System.out.println("Delete");
                         PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM Andmed WHERE id=?");
-                        pstmt1.setObject(1, andmed[rowNumber][0]);
+                        pstmt1.setObject(1, dtm.getValueAt(rowNumber,0));
                         pstmt1.executeUpdate();
+                        dtm.removeRow(rowNumber);
+                        //dtm.fireTableDataChanged();
                     } catch (SQLException ex) {
                         Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
         }
-    }
+        
+        
+        private void tabel_andmed() throws SQLException{
+            
+        Statement stmt = null;
+        ResultSet rs = null;
+        Integer suurus = 0;
+        int tulpi = 6;
+        Boolean cb = true;
+        conn=connect1();
+        
+        stmt = conn.createStatement();
+        rs = stmt.executeQuery("SELECT * FROM Andmed");
+      
+        while(rs.next()) {
+            suurus++;
+        }
+        rs.close();
+        
+        andmed=new Object[suurus][tulpi];
+        PreparedStatement pstmt = conn.prepareStatement("SELECT id,artikkel,kogus,markus,kuupaev FROM Andmed");
+        ResultSet rs3 = pstmt.executeQuery();
+        
+        for(int a=0;a<suurus;a++){
+                
+                rs3.next();
+                Integer id = rs3.getInt(1);
+                String artikkel = rs3.getString(2);
+                String kogus = rs3.getString(3);
+                String markus = rs3.getString(4);
+                String kuupaev = rs3.getString(5);
+                    andmed[a][0]=id;
+                    andmed[a][1]=artikkel;
+                    andmed[a][2]=kogus;
+                    andmed[a][3]=markus;
+                    andmed[a][4]=kuupaev;
+                    andmed[a][5]=cb;
+                
+        } //for lõpp
+        rs3.close();
+     }
+ }

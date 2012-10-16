@@ -60,8 +60,7 @@ public class Tellimine extends JFrame{
         
         this.setVisible(true);
         this.pack();
-       
-    
+         
     }
     
     public static void main(String[] args) throws Exception{

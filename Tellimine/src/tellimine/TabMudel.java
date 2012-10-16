@@ -17,6 +17,7 @@ public class TabMudel extends DefaultTableModel{
 }
     
     private Class[] tTyyp=new Class[]{
+        Integer.class,
         String.class,
         Integer.class,
         String.class,
