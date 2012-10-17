@@ -36,6 +36,7 @@ public class JPanel3 extends JPanel{
    JTable tabel;
    TabMudel dtm;
    Integer rowNumber;
+   Integer suurus;
    
     public JPanel3() throws Exception{
         super();
@@ -95,14 +96,15 @@ public class JPanel3 extends JPanel{
         });
         
     /*
-        tabel.getModel().addTableModelListener(new TableModelListener() {
+        dtm.addTableModelListener(new TableModelListener() {
 
               public void tableChanged(TableModelEvent e) {
                   int row = e.getFirstRow();
-                  int column = 4;
+                  int column = e.getColumn();
                       TableModel model = (TableModel)e.getSource();
-                      Boolean value = (Boolean)model.getValueAt(row, column);
+                      Object value = model.getValueAt(row, column);
                       andmed[row][column] = value;
+                      System.out.println(value);
               }
          });
         */
@@ -116,7 +118,8 @@ public class JPanel3 extends JPanel{
                          System.out.println("New");
                          PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO andmed"+ " (artikkel, kogus, markus, kuupaev)"+ " VALUES ('','','','')");
                          pstmt1.executeUpdate();
-                         Object [] uusRida={"","",0,"","",true};
+                         tabel_andmed();
+                         Object [] uusRida={andmed[suurus][0],"",0,"","",true};
                          dtm.addRow(uusRida);
                          //dtm.fireTableDataChanged();
                     } catch (SQLException ex) {
@@ -144,8 +147,8 @@ public class JPanel3 extends JPanel{
             
         Statement stmt = null;
         ResultSet rs = null;
-        Integer suurus = 0;
         int tulpi = 6;
+        suurus=0;
         Boolean cb = true;
         conn=connect1();
         
@@ -178,5 +181,6 @@ public class JPanel3 extends JPanel{
                 
         } //for lõpp
         rs3.close();
+        suurus-=1;
      }
  }

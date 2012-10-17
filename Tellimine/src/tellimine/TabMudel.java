@@ -5,16 +5,16 @@ import javax.swing.table.DefaultTableModel;
 
 public class TabMudel extends DefaultTableModel{
     
-    @Override
+    /*@Override
     public boolean isCellEditable(int row, int col) {  
             
-        if (col == 4) {  
+        if (col == 5) {  
                 return true;  
             } 
             else {  
                 return false;  
             }         
-}
+}*/
     
     private Class[] tTyyp=new Class[]{
         Integer.class,
