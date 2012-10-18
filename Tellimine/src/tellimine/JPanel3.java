@@ -95,19 +95,37 @@ public class JPanel3 extends JPanel{
             }
         });
         
-    /*
+    
         dtm.addTableModelListener(new TableModelListener() {
 
               public void tableChanged(TableModelEvent e) {
-                  int row = e.getFirstRow();
-                  int column = e.getColumn();
-                      TableModel model = (TableModel)e.getSource();
-                      Object value = model.getValueAt(row, column);
-                      andmed[row][column] = value;
-                      System.out.println(value);
+                try {
+                    
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
+                    
+                    if (column != -1){
+                        TableModel model = (TableModel)e.getSource();
+                        Object value = model.getValueAt(row, column);
+                        andmed[row][column] = value;
+                    }
+                    
+                    if (column == 1 || column == 2 || column == 3 || column == 4){
+                            PreparedStatement pstmt2 = conn.prepareStatement("UPDATE andmed SET artikkel=?, kogus=?, markus=?, kuupaev=? WHERE id=?");
+                            pstmt2.setObject(1, andmed[row][1]);
+                            pstmt2.setObject(2, andmed[row][2]);
+                            pstmt2.setObject(3, andmed[row][3]);
+                            pstmt2.setObject(4, andmed[row][4]);
+                            pstmt2.setObject(5, andmed[row][0]);
+                            pstmt2.executeUpdate();
+                    }
+                        
+                } catch (SQLException ex) {
+                    Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
+                }
               }
          });
-        */
+        
    }    
     
         class PopupActionListener implements ActionListener {
