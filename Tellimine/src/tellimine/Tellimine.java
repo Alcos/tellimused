@@ -57,7 +57,7 @@ public class Tellimine extends JFrame{
         c.gridwidth = 2;
         c.gridy = 3;
         this.add(panel4, c);
-        
+
         this.setVisible(true);
         this.pack();
          

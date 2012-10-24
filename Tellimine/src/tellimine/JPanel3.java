@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
@@ -111,16 +110,18 @@ public class JPanel3 extends JPanel{
                     }
                     
                     if (column == 1 || column == 2 || column == 3 || column == 4){
-                            PreparedStatement pstmt2 = conn.prepareStatement("UPDATE andmed SET artikkel=?, kogus=?, markus=?, kuupaev=? WHERE id=?");
-                            pstmt2.setObject(1, andmed[row][1]);
-                            pstmt2.setObject(2, andmed[row][2]);
-                            pstmt2.setObject(3, andmed[row][3]);
-                            pstmt2.setObject(4, andmed[row][4]);
-                            pstmt2.setObject(5, andmed[row][0]);
-                            pstmt2.executeUpdate();
+                        PreparedStatement pstmt2 = conn.prepareStatement("UPDATE andmed SET artikkel=?, kogus=?, markus=?, kuupaev=? WHERE id=?");
+                        pstmt2.setObject(1, andmed[row][1]);
+                        pstmt2.setObject(2, andmed[row][2]);
+                        pstmt2.setObject(3, andmed[row][3]);
+                        pstmt2.setObject(4, andmed[row][4]);
+                        pstmt2.setObject(5, andmed[row][0]);
+                        pstmt2.executeUpdate();
+                        System.out.println("Uuendatud");
                     }
                         
-                } catch (SQLException ex) {
+                } 
+                catch (SQLException ex) {
                     Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
                 }
               }
