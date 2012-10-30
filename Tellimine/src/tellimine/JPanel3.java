@@ -11,7 +11,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JMenuItem;
@@ -26,7 +25,7 @@ import javax.swing.table.TableModel;
 
 
 public class JPanel3 extends JPanel{
-    
+
    private static String[] tPais={"ID","ArtikliID","Kogus","Märkus","Tellimiskuupäev","Tellitud"};
    private static Object andmed[][]=null;
    private Connection conn;
@@ -36,9 +35,12 @@ public class JPanel3 extends JPanel{
    TabMudel dtm;
    Integer rowNumber;
    Integer suurus;
+   JPanel2 paneel;
+   Integer row;
    
-    public JPanel3() throws Exception{
+    public JPanel3(JPanel2 panel2) throws Exception{
         super();
+        paneel = panel2;
      panel3();
     }
     
@@ -100,7 +102,7 @@ public class JPanel3 extends JPanel{
               public void tableChanged(TableModelEvent e) {
                 try {
                     
-                    int row = e.getFirstRow();
+                    row = e.getFirstRow();
                     int column = e.getColumn();
                     
                     if (column != -1){
@@ -109,17 +111,17 @@ public class JPanel3 extends JPanel{
                         andmed[row][column] = value;
                     }
                     
-                    if (column == 1 || column == 2 || column == 3 || column == 4){
-                        PreparedStatement pstmt2 = conn.prepareStatement("UPDATE andmed SET artikkel=?, kogus=?, markus=?, kuupaev=? WHERE id=?");
+                    if (column == 1 || column == 2 || column == 3 || column == 4 || column == 5){
+                        PreparedStatement pstmt2 = conn.prepareStatement("UPDATE tabelandmed SET mat_id=?, kogus=?, markus=?, tel_kuupaev=?, tellitud=? WHERE id=?");
                         pstmt2.setObject(1, andmed[row][1]);
                         pstmt2.setObject(2, andmed[row][2]);
                         pstmt2.setObject(3, andmed[row][3]);
                         pstmt2.setObject(4, andmed[row][4]);
-                        pstmt2.setObject(5, andmed[row][0]);
+                        pstmt2.setObject(5, andmed[row][5].toString());
+                        pstmt2.setObject(6, andmed[row][0]);
                         pstmt2.executeUpdate();
                         System.out.println("Uuendatud");
-                    }
-                        
+                    }               
                 } 
                 catch (SQLException ex) {
                     Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,12 +137,12 @@ public class JPanel3 extends JPanel{
                 if(actionEvent.getActionCommand().equals("New Record")){
                     try {
                          System.out.println("New");
-                         PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO andmed"+ " (artikkel, kogus, markus, kuupaev)"+ " VALUES ('','','','')");
+                         PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO tabelandmed"+ " (tel_id, mat_id, kogus, markus, tel_kuupaev, tellitud)"+ " VALUES (?,'','','','','true')");
+                         pstmt1.setObject(1, paneel.tellimus.getText());
                          pstmt1.executeUpdate();
                          tabel_andmed();
                          Object [] uusRida={andmed[suurus][0],"",0,"","",true};
                          dtm.addRow(uusRida);
-                         //dtm.fireTableDataChanged();
                     } catch (SQLException ex) {
                          Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -149,11 +151,10 @@ public class JPanel3 extends JPanel{
                 if(actionEvent.getActionCommand().equals("Delete Record")){
                     try {
                         System.out.println("Delete");
-                        PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM Andmed WHERE id=?");
+                        PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM tabelandmed WHERE id=?");
                         pstmt1.setObject(1, dtm.getValueAt(rowNumber,0));
                         pstmt1.executeUpdate();
                         dtm.removeRow(rowNumber);
-                        //dtm.fireTableDataChanged();
                     } catch (SQLException ex) {
                         Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -161,36 +162,39 @@ public class JPanel3 extends JPanel{
             }
         }
         
+        public void tabel_andmed() throws SQLException{
         
-        private void tabel_andmed() throws SQLException{
-            
-        Statement stmt = null;
         ResultSet rs = null;
         int tulpi = 6;
         suurus=0;
-        Boolean cb = true;
         conn=connect1();
         
-        stmt = conn.createStatement();
-        rs = stmt.executeQuery("SELECT * FROM Andmed");
+        
+        PreparedStatement pstm = conn.prepareStatement("SELECT * FROM tabelandmed WHERE tel_id=?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+        pstm.setObject(1, paneel.tellimus.getText());
+        rs = pstm.executeQuery();
       
         while(rs.next()) {
             suurus++;
         }
         rs.close();
         
-        andmed=new Object[suurus][tulpi];
-        PreparedStatement pstmt = conn.prepareStatement("SELECT id,artikkel,kogus,markus,kuupaev FROM Andmed");
-        ResultSet rs3 = pstmt.executeQuery();
         
+        andmed=new Object[suurus][tulpi];
+        PreparedStatement pstmt = conn.prepareStatement("SELECT id,mat_id,kogus,markus,tel_kuupaev,tellitud FROM tabelandmed WHERE tel_id=?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
+        pstmt.setObject(1,paneel.tellimus.getText());
+        ResultSet rs3 = pstmt.executeQuery();
+
         for(int a=0;a<suurus;a++){
                 
                 rs3.next();
                 Integer id = rs3.getInt(1);
                 String artikkel = rs3.getString(2);
-                String kogus = rs3.getString(3);
+                Integer kogus = rs3.getInt(3);
                 String markus = rs3.getString(4);
                 String kuupaev = rs3.getString(5);
+                Boolean cb = rs3.getBoolean(6);
+                
                     andmed[a][0]=id;
                     andmed[a][1]=artikkel;
                     andmed[a][2]=kogus;

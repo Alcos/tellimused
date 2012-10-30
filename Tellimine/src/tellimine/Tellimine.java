@@ -39,7 +39,7 @@ public class Tellimine extends JFrame{
         c.gridy = 1;
         this.add(panel2, c);
         
-        JPanel3 panel3 = new JPanel3();
+        JPanel3 panel3 = new JPanel3(panel2);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 100;
         c.weightx = 1.0;
@@ -48,7 +48,7 @@ public class Tellimine extends JFrame{
         c.gridy = 2;
         this.add(panel3, c);
         
-        JPanel4 panel4 = new JPanel4();
+        JPanel4 panel4 = new JPanel4(panel2, panel3);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 0;
         c.weighty = 1.0;

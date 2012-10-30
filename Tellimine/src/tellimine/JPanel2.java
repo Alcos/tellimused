@@ -1,16 +1,11 @@
 package tellimine;
 
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -46,14 +41,9 @@ public class JPanel2 extends JPanel{
     }
         
     public void panel2() throws SQLException{
-        
-            JButton uuenda = new JButton(">");
-            
-            uuendanupp uuendus = new uuendanupp();
-            uuenda.addActionListener(uuendus);
             
         conn=connect();
-        stmt = conn.createStatement();
+        stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
         rs = stmt.executeQuery("SELECT * FROM yldandmed");
         rs.next();
         tellimus = new JLabel();
@@ -78,30 +68,14 @@ public class JPanel2 extends JPanel{
         this.add(new JLabel(""));
         this.add(new JLabel(""));
         this.add(new JLabel(""));
-        this.add(uuenda);
         
     }
     
     public void yldandmed() throws SQLException{
                 
         tellimus.setText(rs.getString("tel_id"));
-        System.out.println(rs.getString("tellija"));
         tellija.setText(rs.getString("tellija"));
         kuupaev.setText(rs.getString("kuupaev"));
         tk_nr.setText(rs.getString("tk_nr"));
-    }
-    
-    
-            private class uuendanupp implements ActionListener{
-            
-            public void actionPerformed(ActionEvent e){
-                    try {
-                        rs.next();
-                        yldandmed();
-                    } catch (SQLException ex) {
-                        Logger.getLogger(JPanel2.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-            }
-             
     }
 }
