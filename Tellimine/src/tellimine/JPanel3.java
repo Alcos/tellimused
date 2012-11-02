@@ -37,6 +37,7 @@ public class JPanel3 extends JPanel{
    Integer suurus;
    JPanel2 paneel;
    Integer row;
+   JScrollPane jsp;
    
     public JPanel3(JPanel2 panel2) throws Exception{
         super();
@@ -67,7 +68,7 @@ public class JPanel3 extends JPanel{
         ActionListener actionListener = new PopupActionListener();
         dtm=new TabMudel(andmed,tPais);
         tabel=new JTable(dtm);
-        JScrollPane jsp=new JScrollPane(tabel);
+        jsp=new JScrollPane(tabel);
         this.add(jsp,BorderLayout.CENTER);
         popup = new JPopupMenu();
         menuItem = new JMenuItem("New Record");
@@ -162,8 +163,13 @@ public class JPanel3 extends JPanel{
             }
         }
         
-        public void tabel_andmed() throws SQLException{
+        public void tabel_uuenda() throws SQLException{
+            tabel_andmed();
+            dtm.setDataVector(andmed,tPais);
+        }
         
+        public void tabel_andmed() throws SQLException{
+
         ResultSet rs = null;
         int tulpi = 6;
         suurus=0;
@@ -193,15 +199,19 @@ public class JPanel3 extends JPanel{
                 Integer kogus = rs3.getInt(3);
                 String markus = rs3.getString(4);
                 String kuupaev = rs3.getString(5);
-                Boolean cb = rs3.getBoolean(6);
+                String cb = rs3.getString(6);
                 
                     andmed[a][0]=id;
                     andmed[a][1]=artikkel;
                     andmed[a][2]=kogus;
                     andmed[a][3]=markus;
                     andmed[a][4]=kuupaev;
-                    andmed[a][5]=cb;
-                
+                    if(cb.equals("true")) {
+                    andmed[a][5]=true;
+                    }
+                    else {
+                    andmed[a][5]=false;
+                    }
         } //for lõpp
         rs3.close();
         suurus-=1;

@@ -24,51 +24,68 @@ public class JPanel4 extends JPanel{
      panel4();
     }
         
-        private void panel4() throws SQLException{    
+        private void panel4() throws SQLException{
                       
             tel_id = new JFormattedTextField();
-            tel_id.setPreferredSize( new Dimension( 40, 27 ) );
+            tel_id.setPreferredSize(new Dimension(40, 27));
             tel_id.setText(paneel.rs.getString("tel_id"));
             
-            JButton uuenda = new JButton("<");
-            this.add(uuenda);
-            uuendanupp uuendus = new uuendanupp();
-            uuenda.addActionListener(uuendus);
+            JButton tagasi = new JButton("<");
+            this.add(tagasi);
+            tagasinupp eelmine = new tagasinupp();
+            tagasi.addActionListener(eelmine);
             this.add(tel_id);
-            JButton lisa = new JButton(">");
-            this.add(lisa);
-            lisanupp lisamine = new lisanupp();
-            lisa.addActionListener(lisamine);       
+            JButton edasi = new JButton(">");
+            this.add(edasi);
+            edasinupp jargmine = new edasinupp();
+            edasi.addActionListener(jargmine);       
         }
         
             
         
-        private class uuendanupp implements ActionListener{
+        private class tagasinupp implements ActionListener{
             
             public void actionPerformed(ActionEvent e){
                 try {
                     paneel.rs.previous();
-                    paneel.yldandmed();
-                    tel_id.setText(paneel.rs.getString("tel_id"));
-                    paneel3.tabel_andmed();
+                    
+                    if(paneel.rs.getRow()==0){
+                       paneel.rs.last();
+                       paneel.yldandmed();
+                       tel_id.setText(paneel.rs.getString("tel_id"));
+                       paneel3.tabel_uuenda();
+                    }
+                    else{ 
+                        paneel.yldandmed();
+                        tel_id.setText(paneel.rs.getString("tel_id"));
+                        paneel3.tabel_uuenda();
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(JPanel4.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-             
     }
-        private class lisanupp implements ActionListener{
+        private class edasinupp implements ActionListener{
             
             public void actionPerformed(ActionEvent e){
-                try {   
+                try {
                     paneel.rs.next();
-                    paneel.yldandmed();
-                    tel_id.setText(paneel.rs.getString("tel_id"));
-                    paneel3.tabel_andmed();  
+                    
+                    if(paneel.rs.getRow()==0){
+                       paneel.rs.first();
+                       paneel.yldandmed();
+                       tel_id.setText(paneel.rs.getString("tel_id"));
+                       paneel3.tabel_uuenda();
+                    }
+                    else{
+                        paneel.yldandmed();
+                        tel_id.setText(paneel.rs.getString("tel_id"));
+                        paneel3.tabel_uuenda();
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(JPanel4.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
-            }        
+            }
     }
 }
