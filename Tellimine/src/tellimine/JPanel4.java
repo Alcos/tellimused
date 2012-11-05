@@ -28,7 +28,7 @@ public class JPanel4 extends JPanel{
                       
             tel_id = new JFormattedTextField();
             tel_id.setPreferredSize(new Dimension(40, 27));
-            tel_id.setText(paneel.rs.getString("tel_id"));
+            tel_id.setText(paneel.tellimus.getText());
             
             JButton tagasi = new JButton("<");
             this.add(tagasi);
@@ -47,20 +47,20 @@ public class JPanel4 extends JPanel{
             
             public void actionPerformed(ActionEvent e){
                 try {
-                    paneel.rs.previous();
+                    paneel.rida--;
                     
-                    if(paneel.rs.getRow()==0){
-                       paneel.rs.last();
-                       paneel.yldandmed();
-                       tel_id.setText(paneel.rs.getString("tel_id"));
-                       paneel3.tabel_uuenda();
-                    }
-                    else{ 
+                    if(paneel.rida < 0){
+                        paneel.rida=paneel.suurus;
                         paneel.yldandmed();
-                        tel_id.setText(paneel.rs.getString("tel_id"));
+                        tel_id.setText(paneel.tellimus.getText());
                         paneel3.tabel_uuenda();
                     }
-                } catch (SQLException ex) {
+                    else{
+                        paneel.yldandmed();
+                        tel_id.setText(paneel.tellimus.getText());
+                        paneel3.tabel_uuenda();
+                    }
+                } catch (Exception ex) {
                     Logger.getLogger(JPanel4.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
@@ -69,20 +69,21 @@ public class JPanel4 extends JPanel{
             
             public void actionPerformed(ActionEvent e){
                 try {
-                    paneel.rs.next();
+                    paneel.rida++;
                     
-                    if(paneel.rs.getRow()==0){
-                       paneel.rs.first();
-                       paneel.yldandmed();
-                       tel_id.setText(paneel.rs.getString("tel_id"));
-                       paneel3.tabel_uuenda();
+                    if(paneel.rida > paneel.suurus){
+                        paneel.rida=0;
+                        paneel.yldandmed();
+                        tel_id.setText(paneel.tellimus.getText());
+                        paneel3.tabel_uuenda();
                     }
                     else{
                         paneel.yldandmed();
-                        tel_id.setText(paneel.rs.getString("tel_id"));
+                        tel_id.setText(paneel.tellimus.getText());
                         paneel3.tabel_uuenda();
                     }
-                } catch (SQLException ex) {
+                }
+                catch (Exception ex) {
                     Logger.getLogger(JPanel4.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 

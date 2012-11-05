@@ -1,11 +1,17 @@
 package tellimine;
 
 import java.awt.GridLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,6 +25,7 @@ public class JPanel2 extends JPanel{
     JFormattedTextField tellija, kuupaev;
     Statement stmt = null;
     ResultSet rs = null;
+    Integer rida;
     
     public JPanel2() throws SQLException{
         super();
@@ -50,6 +57,7 @@ public class JPanel2 extends JPanel{
         tk_nr = new JLabel();
         tellija = new JFormattedTextField();
         kuupaev = new JFormattedTextField();
+        rida = 0;
         
         yldandmed();
         
@@ -68,14 +76,42 @@ public class JPanel2 extends JPanel{
         this.add(new JLabel(""));
         this.add(new JLabel(""));
         this.add(new JLabel(""));
-        
+         
+        PropertyChangeListener l = new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                try {
+                    //oldvalue = newvalue
+                    if(evt.getOldValue()==evt.getNewValue()){
+                        System.out.println("Proov");
+                    }
+                    else{
+                        System.out.println("Test");
+                        PreparedStatement pstmt = conn.prepareStatement("UPDATE yldandmed SET tellija=?, kuupaev=? WHERE tel_id=?");
+                        pstmt.setObject(1, tellija.getText());
+                        pstmt.setObject(2, kuupaev.getText());
+                        pstmt.setObject(3, tellimus.getText());
+                        pstmt.executeUpdate();
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(JPanel2.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };     
+            kuupaev.addPropertyChangeListener(l);
+            tellija.addPropertyChangeListener(l);
     }
     
     public void yldandmed() throws SQLException{
-                
-        tellimus.setText(rs.getString("tel_id"));
-        tellija.setText(rs.getString("tellija"));
-        kuupaev.setText(rs.getString("kuupaev"));
-        tk_nr.setText(rs.getString("tk_nr"));
-    }
+              
+        ArrayList al=new ArrayList();
+        Paring sql=new Paring();
+        Object [][] tulem=sql.SelectParing("SELECT * FROM yldandmed", al);
+        suurus=tulem.length-1;
+        
+        tellimus.setText(tulem[rida][0].toString());
+        tellija.setText(tulem[rida][1].toString());
+        kuupaev.setText(tulem[rida][2].toString());
+        tk_nr.setText(tulem[rida][3].toString());
+    }   
 }

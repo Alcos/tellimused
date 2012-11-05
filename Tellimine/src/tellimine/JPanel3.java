@@ -207,10 +207,10 @@ public class JPanel3 extends JPanel{
                     andmed[a][3]=markus;
                     andmed[a][4]=kuupaev;
                     if(cb.equals("true")) {
-                    andmed[a][5]=true;
+                        andmed[a][5]=true;
                     }
                     else {
-                    andmed[a][5]=false;
+                        andmed[a][5]=false;
                     }
         } //for lõpp
         rs3.close();
