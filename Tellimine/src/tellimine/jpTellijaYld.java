@@ -1,8 +1,8 @@
 package tellimine;
 
 import java.awt.GridLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class JPanel2 extends JPanel{
+public class jpTellijaYld extends JPanel{
     
     private Connection conn;
     Integer suurus;
@@ -27,13 +27,13 @@ public class JPanel2 extends JPanel{
     ResultSet rs = null;
     Integer rida;
     
-    public JPanel2() throws SQLException{
+    public jpTellijaYld() throws SQLException{
         super();
      panel2();
     }
     
     
-        public static Connection connect() {
+        public static Connection connect() { // Ühenduse loomine andmebaasiga
         
         Connection conn = null;
         
@@ -45,7 +45,7 @@ public class JPanel2 extends JPanel{
            System.err.println("SQLException : " + e.getMessage());
         }
         return conn;
-    }
+    } 
         
     public void panel2() throws SQLException{
             
@@ -77,29 +77,23 @@ public class JPanel2 extends JPanel{
         this.add(new JLabel(""));
         this.add(new JLabel(""));
          
-        PropertyChangeListener l = new PropertyChangeListener() {
-
-            public void propertyChange(PropertyChangeEvent evt) {
+         ActionListener actionListener = new ActionListener() { // Kliendi andmete muudatuste listener.
+          
+             public void actionPerformed(ActionEvent actionEvent) {
                 try {
-                    //oldvalue = newvalue
-                    if(evt.getOldValue()==evt.getNewValue()){
-                        System.out.println("Proov");
-                    }
-                    else{
-                        System.out.println("Test");
                         PreparedStatement pstmt = conn.prepareStatement("UPDATE yldandmed SET tellija=?, kuupaev=? WHERE tel_id=?");
                         pstmt.setObject(1, tellija.getText());
                         pstmt.setObject(2, kuupaev.getText());
                         pstmt.setObject(3, tellimus.getText());
                         pstmt.executeUpdate();
-                    }
+                        //Tellimuse id järgi muudetakse ära tellija nimi ja kuupäev.
                 } catch (SQLException ex) {
-                    Logger.getLogger(JPanel2.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(jpTellijaYld.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        };     
-            kuupaev.addPropertyChangeListener(l);
-            tellija.addPropertyChangeListener(l);
+        }; // Actionlisteneri lõpp.
+            kuupaev.addActionListener(actionListener);
+            tellija.addActionListener(actionListener);
     }
     
     public void yldandmed() throws SQLException{
@@ -109,9 +103,13 @@ public class JPanel2 extends JPanel{
         Object [][] tulem=sql.SelectParing("SELECT * FROM yldandmed", al);
         suurus=tulem.length-1;
         
+        //Andmebaasist andmete lugemine objekt massiivi.
+        
         tellimus.setText(tulem[rida][0].toString());
         tellija.setText(tulem[rida][1].toString());
         kuupaev.setText(tulem[rida][2].toString());
         tk_nr.setText(tulem[rida][3].toString());
+        
+        //Andmete sisestamine tekstikastidesse.
     }   
 }

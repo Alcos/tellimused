@@ -24,22 +24,22 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
 
-public class JPanel3 extends JPanel{
+public class jpTellimusteTab extends JPanel{
 
    private static String[] tPais={"ID","ArtikliID","Kogus","Märkus","Tellimiskuupäev","Tellitud"};
-   private static Object andmed[][]=null;
-   private Connection conn;
+   public static Object andmed[][]=null;
+   public Connection conn;
    JPopupMenu popup;
    JMenuItem menuItem;
    JTable tabel;
    TabMudel dtm;
    Integer rowNumber;
    Integer suurus;
-   JPanel2 paneel;
+   jpTellijaYld paneel;
    Integer row;
    JScrollPane jsp;
    
-    public JPanel3(JPanel2 panel2) throws Exception{
+    public jpTellimusteTab(jpTellijaYld panel2) throws Exception{
         super();
         paneel = panel2;
      panel3();
@@ -123,9 +123,9 @@ public class JPanel3 extends JPanel{
                         pstmt2.executeUpdate();
                         System.out.println("Uuendatud");
                     }               
-                } 
+                }
                 catch (SQLException ex) {
-                    Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(jpTellimusteTab.class.getName()).log(Level.SEVERE, null, ex);
                 }
               }
          });
@@ -137,7 +137,6 @@ public class JPanel3 extends JPanel{
                 
                 if(actionEvent.getActionCommand().equals("New Record")){
                     try {
-                         System.out.println("New");
                          PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO tabelandmed"+ " (tel_id, mat_id, kogus, markus, tel_kuupaev, tellitud)"+ " VALUES (?,'','','','','true')");
                          pstmt1.setObject(1, paneel.tellimus.getText());
                          pstmt1.executeUpdate();
@@ -145,19 +144,18 @@ public class JPanel3 extends JPanel{
                          Object [] uusRida={andmed[suurus][0],"",0,"","",true};
                          dtm.addRow(uusRida);
                     } catch (SQLException ex) {
-                         Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
+                         Logger.getLogger(jpTellimusteTab.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
                 if(actionEvent.getActionCommand().equals("Delete Record")){
                     try {
-                        System.out.println("Delete");
                         PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM tabelandmed WHERE id=?");
                         pstmt1.setObject(1, dtm.getValueAt(rowNumber,0));
                         pstmt1.executeUpdate();
                         dtm.removeRow(rowNumber);
                     } catch (SQLException ex) {
-                        Logger.getLogger(JPanel3.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(jpTellimusteTab.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
@@ -184,7 +182,6 @@ public class JPanel3 extends JPanel{
             suurus++;
         }
         rs.close();
-        
         
         andmed=new Object[suurus][tulpi];
         PreparedStatement pstmt = conn.prepareStatement("SELECT id,mat_id,kogus,markus,tel_kuupaev,tellitud FROM tabelandmed WHERE tel_id=?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);

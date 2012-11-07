@@ -8,24 +8,23 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
-public class JPanel1 extends JPanel{
+public class jpPealkiri extends JPanel{
    //private 
     
     
     
-  public JPanel1(){
+  public jpPealkiri(){
       super();
   initKomp();
   }
     
    
-   private void initKomp(){
-     this.setLayout(new BorderLayout());
+   private void initKomp(){ // Kasutajaliidese pealkiri ja paigutus
+       this.setLayout(new BorderLayout());
        this.setBorder(BorderFactory.createLineBorder(Color.black));
        Font f = new Font("Dialog", Font.PLAIN, 20);
        JLabel label1 = new JLabel("Tellimine");
        label1.setFont(f);
        this.add(label1,BorderLayout.SOUTH);
-
    }
 }

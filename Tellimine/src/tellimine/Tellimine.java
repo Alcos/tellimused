@@ -16,14 +16,14 @@ public class Tellimine extends JFrame{
           super("Tellimine");
     }
     
-    public void looFrame() throws Exception{
+    public void looFrame() throws Exception{ // Raamis paneelide paigutamine
         
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        this.setPreferredSize(new Dimension(800, 310));
        this.setLayout(new GridBagLayout());
        GridBagConstraints c = new GridBagConstraints();
        
-        JPanel1 panel1 = new JPanel1();
+        jpPealkiri panel1 = new jpPealkiri();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(10,10,10,10);
         c.weightx = 1.0;
@@ -31,7 +31,7 @@ public class Tellimine extends JFrame{
         c.gridy = 0;
         this.add(panel1, c);
 
-        JPanel2 panel2 = new JPanel2();
+        jpTellijaYld panel2 = new jpTellijaYld();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.insets = new Insets(0,0,0,0);
         c.weightx = 1.0;
@@ -39,7 +39,7 @@ public class Tellimine extends JFrame{
         c.gridy = 1;
         this.add(panel2, c);
         
-        JPanel3 panel3 = new JPanel3(panel2);
+        jpTellimusteTab panel3 = new jpTellimusteTab(panel2);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 100;
         c.weightx = 1.0;
@@ -48,7 +48,7 @@ public class Tellimine extends JFrame{
         c.gridy = 2;
         this.add(panel3, c);
         
-        JPanel4 panel4 = new JPanel4(panel2, panel3);
+        jpNupud panel4 = new jpNupud(panel2, panel3);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 0;
         c.weighty = 1.0;
