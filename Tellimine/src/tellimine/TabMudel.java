@@ -8,12 +8,12 @@ public class TabMudel extends DefaultTableModel{
     @Override
     public boolean isCellEditable(int row, int col) {  
             
-        if (col != 0) {  
+        if (col != 0) {//Esimest tulpa ei saa muuta.
                 return true;  
             } 
             else {  
                 return false;  
-            }         
+            }
 }
     
     private Class[] tTyyp=new Class[]{
