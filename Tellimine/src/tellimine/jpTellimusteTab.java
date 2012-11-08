@@ -45,7 +45,7 @@ public class jpTellimusteTab extends JPanel{
      panel3();
     }
     
-    public static Connection connect1() {
+    public static Connection connect1() { //Ühenduse loomine andmebaasiga.
         
         Connection conn = null;
         
@@ -71,9 +71,11 @@ public class jpTellimusteTab extends JPanel{
         jsp=new JScrollPane(tabel);
         this.add(jsp,BorderLayout.CENTER);
         popup = new JPopupMenu();
+        
         menuItem = new JMenuItem("New Record");
         menuItem.addActionListener(actionListener);
         popup.add(menuItem);
+        
         menuItem = new JMenuItem("Delete Record");
         menuItem.addActionListener(actionListener);
         popup.add(menuItem);
@@ -87,12 +89,12 @@ public class jpTellimusteTab extends JPanel{
             public void mouseReleased(MouseEvent Me){
                 if(Me.isPopupTrigger()){
                     popup.show(Me.getComponent(), Me.getX(), Me.getY());
-                       
+                    //Teeb popupi nähtavaks ja märgib ära, kus kohas popup avaneb.
 			Point p = Me.getPoint();
 			rowNumber = tabel.rowAtPoint( p );
 			ListSelectionModel model = tabel.getSelectionModel();
 			model.setSelectionInterval( rowNumber, rowNumber );
-                        
+                        //Parema hiire klahviga avaneb popup ja selekteerib rea.
                    }
             }
         });
@@ -106,13 +108,14 @@ public class jpTellimusteTab extends JPanel{
                     row = e.getFirstRow();
                     int column = e.getColumn();
                     
-                    if (column != -1){
+                    if (column != -1){ //Uue rea lisamisel ei tehta if lauses olevat tegevust.
                         TableModel model = (TableModel)e.getSource();
                         Object value = model.getValueAt(row, column);
                         andmed[row][column] = value;
+                        //Tabelis muudatusi tehes kirjutatakse objekt massiivis muudetud andmed üle.
                     }
                     
-                    if (column == 1 || column == 2 || column == 3 || column == 4 || column == 5){
+                    if (column == 1 || column == 2 || column == 3 || column == 4 || column == 5){ //Muudatusi tehakse ainult siis, kui muudetakse andmeid tulbas 1-5.
                         PreparedStatement pstmt2 = conn.prepareStatement("UPDATE tabelandmed SET mat_id=?, kogus=?, markus=?, tel_kuupaev=?, tellitud=? WHERE id=?");
                         pstmt2.setObject(1, andmed[row][1]);
                         pstmt2.setObject(2, andmed[row][2]);
@@ -121,8 +124,8 @@ public class jpTellimusteTab extends JPanel{
                         pstmt2.setObject(5, andmed[row][5].toString());
                         pstmt2.setObject(6, andmed[row][0]);
                         pstmt2.executeUpdate();
-                        System.out.println("Uuendatud");
-                    }               
+                        //Tabelis tehtud muudatused salvestatakse andmebaasi.
+                    }  
                 }
                 catch (SQLException ex) {
                     Logger.getLogger(jpTellimusteTab.class.getName()).log(Level.SEVERE, null, ex);
@@ -135,25 +138,30 @@ public class jpTellimusteTab extends JPanel{
         class PopupActionListener implements ActionListener {
             public void actionPerformed(ActionEvent actionEvent) {
                 
-                if(actionEvent.getActionCommand().equals("New Record")){
+                if(actionEvent.getActionCommand().equals("New Record")){ //Kui vajutada nuppu "New Record", tehakse tegevus.
                     try {
                          PreparedStatement pstmt1 = conn.prepareStatement("INSERT INTO tabelandmed"+ " (tel_id, mat_id, kogus, markus, tel_kuupaev, tellitud)"+ " VALUES (?,'','','','','true')");
                          pstmt1.setObject(1, paneel.tellimus.getText());
                          pstmt1.executeUpdate();
-                         tabel_andmed();
+                         //Lisatakse andmebaasi uus rida.
+                         tabel_andmed(); 
+                         //Andmete uuendamine objekti massiivis - andmed.
                          Object [] uusRida={andmed[suurus][0],"",0,"","",true};
                          dtm.addRow(uusRida);
+                         //Uue rea lisamine tabelisse.
                     } catch (SQLException ex) {
                          Logger.getLogger(jpTellimusteTab.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 
-                if(actionEvent.getActionCommand().equals("Delete Record")){
+                if(actionEvent.getActionCommand().equals("Delete Record")){ //Kui vajutada nuppu "Delete Record", tehakse tegevus.
                     try {
                         PreparedStatement pstmt1 = conn.prepareStatement("DELETE FROM tabelandmed WHERE id=?");
                         pstmt1.setObject(1, dtm.getValueAt(rowNumber,0));
                         pstmt1.executeUpdate();
+                        //Kustutatakse ära rida andmebaasist.
                         dtm.removeRow(rowNumber);
+                        //Rea kustutamine tabelist.
                     } catch (SQLException ex) {
                         Logger.getLogger(jpTellimusteTab.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -164,6 +172,7 @@ public class jpTellimusteTab extends JPanel{
         public void tabel_uuenda() throws SQLException{
             tabel_andmed();
             dtm.setDataVector(andmed,tPais);
+            //Andmete uuendamine tabelis.
         }
         
         public void tabel_andmed() throws SQLException{
@@ -177,18 +186,20 @@ public class jpTellimusteTab extends JPanel{
         PreparedStatement pstm = conn.prepareStatement("SELECT * FROM tabelandmed WHERE tel_id=?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
         pstm.setObject(1, paneel.tellimus.getText());
         rs = pstm.executeQuery();
-      
+        //Otsitakse üles andmed tellimuse id järgi.
+        
         while(rs.next()) {
             suurus++;
         }
+        //Ridade kokkulugemine.
         rs.close();
         
         andmed=new Object[suurus][tulpi];
         PreparedStatement pstmt = conn.prepareStatement("SELECT id,mat_id,kogus,markus,tel_kuupaev,tellitud FROM tabelandmed WHERE tel_id=?", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
         pstmt.setObject(1,paneel.tellimus.getText());
         ResultSet rs3 = pstmt.executeQuery();
-
-        for(int a=0;a<suurus;a++){
+        //Andmete välja otsimine tellimuse id järgi.
+        for(int a=0;a<suurus;a++){ //Tsükkel, mille käigus lisatakse leitud andmed objekt massiivi.
                 
                 rs3.next();
                 Integer id = rs3.getInt(1);
