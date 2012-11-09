@@ -33,7 +33,7 @@ public class jpTellijaYld extends JPanel{
     }
     
     
-        public static Connection connect() { // Ühenduse loomine andmebaasiga
+        public static Connection connect() { // Ühenduse loomine andmebaasiga.
         
         Connection conn = null;
         
@@ -50,9 +50,6 @@ public class jpTellijaYld extends JPanel{
     public void panel2() throws SQLException{
             
         conn=connect();
-        stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE, ResultSet.HOLD_CURSORS_OVER_COMMIT);
-        rs = stmt.executeQuery("SELECT * FROM yldandmed");
-        rs.next();
         tellimus = new JLabel();
         tk_nr = new JLabel();
         tellija = new JFormattedTextField();

@@ -16,7 +16,7 @@ public class Tellimine extends JFrame{
           super("Tellimine");
     }
     
-    public void looFrame() throws Exception{ // Raamis paneelide paigutamine
+    public void looFrame() throws Exception{ // Raamis paneelide paigutamine.
         
        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        this.setPreferredSize(new Dimension(800, 310));
