@@ -115,7 +115,7 @@ public class jpTellimusteTab extends JPanel{
                         //Tabelis muudatusi tehes kirjutatakse objekt massiivis muudetud andmed üle.
                     }
                     
-                    if (column == 1 || column == 2 || column == 3 || column == 4 || column == 5){ //Muudatusi tehakse ainult siis, kui muudetakse andmeid tulbas 1-5.
+                    if (column == 1 || column == 2 || column == 3 || column == 4 || column == 5){ //Muudatusi tehakse ainult siis, kui muudetakse andmeid tulpades 1-5.
                         PreparedStatement pstmt2 = conn.prepareStatement("UPDATE tabelandmed SET mat_id=?, kogus=?, markus=?, tel_kuupaev=?, tellitud=? WHERE id=?");
                         pstmt2.setObject(1, andmed[row][1]);
                         pstmt2.setObject(2, andmed[row][2]);
@@ -191,7 +191,7 @@ public class jpTellimusteTab extends JPanel{
         while(rs.next()) {
             suurus++;
         }
-        //Ridade kokkulugemine.
+        //Ridade kokkulugemine tel_id järgi.
         rs.close();
         
         andmed=new Object[suurus][tulpi];
